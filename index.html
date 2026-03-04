@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shadow AI Scanner — Live Demo</title>
-  <meta name="description" content="Client-side Shadow AI scanner demo: detects exposed API keys, AI libraries, and hardcoded prompts. Files never leave your browser." />
-  <meta name="robots" content="noindex" />
+
+  <title>Shadow AI Scanner — Privacy‑First Code Risk Demo</title>
+  <meta name="description" content="Detect Shadow AI risk signals in minutes: exposed API keys, AI libraries, and hardcoded prompts. Runs 100% locally in your browser — no uploads." />
+  <meta name="robots" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Shadow AI Scanner — Privacy‑First Code Risk Demo" />
+  <meta property="og:description" content="Local-only scanning for exposed keys, AI libraries, and hardcoded prompts. Export a professional report as Markdown or JSON." />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Shadow AI Scanner — Privacy‑First Code Risk Demo" />
+  <meta name="twitter:description" content="Local-only scanning for exposed keys, AI libraries, and hardcoded prompts." />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -24,71 +33,127 @@
       }
     }
   </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Shadow AI Scanner (Demo)",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "description": "Privacy-first demo to detect Shadow AI risk signals in source code.",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}
+  }
+  </script>
+
   <style>
     body{ background:#020617; color:#F8FAFC; }
-    .glass{ background: rgba(15,23,42,.65); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.06); }
+    .glass{ background: rgba(15,23,42,.68); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.06); }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .soft{ background: radial-gradient(circle at 20% 0%, rgba(212,175,55,.12) 0%, transparent 55%), radial-gradient(circle at 100% 0%, rgba(56,189,248,.10) 0%, transparent 50%); }
   </style>
 </head>
+
 <body class="min-h-full">
+  <!-- NAV -->
   <header class="border-b border-white/5 bg-bg/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-6">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center text-gold font-semibold">SA</div>
         <div>
-          <div class="text-sm tracking-[0.22em] text-secondary">ARX INTELLIGENCE</div>
-          <div class="text-lg font-medium">Shadow AI Scanner — Live Demo</div>
+          <div class="text-[11px] tracking-[0.22em] text-secondary">ARX INTELLIGENCE</div>
+          <div class="text-base md:text-lg font-medium">Shadow AI Scanner</div>
         </div>
       </div>
-      <div class="text-xs text-secondary hidden md:block">
-        <span class="text-green-400 font-semibold">Privacy-first:</span> runs 100% in your browser
-      </div>
+      <nav class="hidden md:flex items-center gap-6 text-xs tracking-widest text-secondary">
+        <a href="#why" class="hover:text-gold transition">WHY</a>
+        <a href="#demo" class="hover:text-gold transition">DEMO</a>
+        <a href="#deliverables" class="hover:text-gold transition">DELIVERABLES</a>
+        <a href="#contact" class="px-4 py-2 rounded border border-white/10 text-white hover:border-gold/50 hover:text-gold transition">CONTACT</a>
+      </nav>
+      <a href="#demo" class="md:hidden px-4 py-2 border border-white/15 rounded text-white text-xs tracking-wider hover:border-gold/50 hover:text-gold transition">Run demo</a>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-6 py-10">
     <!-- HERO -->
-    <section class="relative overflow-hidden rounded-2xl glass p-8 md:p-10 mb-10">
-      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 20% 0%, rgba(212,175,55,.12) 0%, transparent 55%), radial-gradient(circle at 100% 0%, rgba(56,189,248,.10) 0%, transparent 50%);"></div>
+    <section class="relative overflow-hidden rounded-2xl glass soft p-8 md:p-10 mb-10">
       <div class="relative">
-        <div class="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-green-500/20 bg-green-500/5 mb-6">
-          <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative rounded-full h-2 w-2 bg-green-500"></span></span>
-          <span class="text-[10px] uppercase tracking-widest font-bold text-green-400">EU AI Act: August 2026 milestone</span>
-        </div>
+        <div class="flex flex-col lg:flex-row gap-10 items-start">
+          <div class="flex-1">
+            <div class="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-green-500/20 bg-green-500/5 mb-6">
+              <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative rounded-full h-2 w-2 bg-green-500"></span></span>
+              <span class="text-[10px] uppercase tracking-widest font-bold text-green-400">Privacy‑first: no uploads • runs locally</span>
+            </div>
 
-        <h1 class="text-3xl md:text-5xl font-light leading-tight mb-4">
-          Detect <span class="italic" style="color:#D4AF37">Shadow AI</span> in minutes.
-        </h1>
-        <p class="text-secondary max-w-3xl leading-relaxed mb-6">
-          This demo scans a codebase <b>locally</b> for common risk signals: exposed API keys, AI/LLM library imports, and hardcoded prompts.
-          <span class="text-white">No uploads.</span> No server processing. Your files never leave the browser.
-        </p>
+            <h1 class="text-3xl md:text-5xl font-light leading-tight mb-4">
+              Make <span class="italic" style="color:#D4AF37">Shadow AI</span> visible — in minutes.
+            </h1>
+            <p class="text-secondary max-w-3xl leading-relaxed mb-6">
+              This demo scans source code for early risk signals: <b>exposed API keys</b>, <b>AI/LLM library usage</b>, and <b>hardcoded prompts</b>.
+              It’s designed to be safe to run in sensitive environments (bank‑friendly): <span class="text-white">files never leave your device</span>.
+            </p>
 
-        <div class="flex flex-col md:flex-row gap-3 md:items-center">
-          <button id="btnDemo" class="px-4 py-2.5 rounded bg-white text-bg font-semibold tracking-widest text-xs uppercase hover:bg-gold transition">
-            Load demo dataset
-          </button>
-          <button id="btnClear" class="px-4 py-2.5 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition">
-            Clear
-          </button>
-          <div class="text-xs text-secondary md:ml-auto">
-            Tip: In Chrome you can scan a folder via <span class="mono">Select folder…</span>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <a href="#demo" class="px-5 py-3 rounded bg-white text-bg font-semibold tracking-widest text-xs uppercase hover:bg-gold transition">Run live demo</a>
+              <button id="btnDemo" class="px-5 py-3 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition">Load demo dataset</button>
+              <a href="/demo-dataset.zip" class="px-5 py-3 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition" download>Download dataset</a>
+            </div>
+
+            <div class="mt-5 text-xs text-secondary">
+              Note: The dataset contains <b>fake keys</b> for safe demonstration.
+            </div>
           </div>
+
+          <div class="w-full lg:w-[420px]">
+            <div class="glass rounded-2xl p-6">
+              <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">What you get</div>
+              <ul class="space-y-3 text-sm text-white/90">
+                <li class="flex gap-3"><span class="text-gold">01</span><span><b>Risk report</b> (exportable as Markdown/JSON) with masked secrets.</span></li>
+                <li class="flex gap-3"><span class="text-gold">02</span><span><b>Remediation guidance</b>: what to rotate, remove, and harden next.</span></li>
+                <li class="flex gap-3"><span class="text-gold">03</span><span><b>Continuous monitoring</b> option: CI checks + alerts (GitHub Actions).</span></li>
+              </ul>
+              <div class="mt-5 flex gap-3">
+                <a class="flex-1 px-4 py-2.5 rounded bg-gold text-bg font-semibold tracking-widest text-xs uppercase text-center hover:opacity-90 transition" href="/sample-report.md" download>Sample report</a>
+                <a class="flex-1 px-4 py-2.5 rounded bg-white/10 text-white tracking-widest text-xs uppercase text-center hover:bg-white/15 transition" href="/privacy.html">Privacy</a>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <!-- INPUTS -->
-    <section class="grid md:grid-cols-2 gap-6 mb-10">
+    <!-- WHY -->
+    <section id="why" class="grid md:grid-cols-3 gap-6 mb-10">
       <div class="glass rounded-2xl p-6">
-        <h2 class="text-lg font-medium mb-4">1) Scan a codebase</h2>
-        <p class="text-sm text-secondary mb-4">Choose a folder (recommended) or select multiple files.</p>
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Problem</div>
+        <div class="text-lg font-medium mb-2">Shadow AI happens by default</div>
+        <p class="text-sm text-secondary leading-relaxed">Teams adopt ChatGPT/Copilot/automation scripts faster than governance. The result: unmanaged tools, unknown data flows, and hidden compliance + security risk.</p>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Risk</div>
+        <div class="text-lg font-medium mb-2">Secrets + leakage</div>
+        <p class="text-sm text-secondary leading-relaxed">Exposed keys, permissive configs, and hardcoded prompts can leak confidential data or enable unauthorized access — often without anyone noticing.</p>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Outcome</div>
+        <div class="text-lg font-medium mb-2">Make it detectable + actionable</div>
+        <p class="text-sm text-secondary leading-relaxed">We start with fast indicators, then turn findings into a remediation plan and (optionally) continuous monitoring in CI/CD.</p>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo" class="grid md:grid-cols-2 gap-6 mb-10">
+      <div class="glass rounded-2xl p-6">
+        <h2 class="text-lg font-medium mb-4">1) Scan a folder / files</h2>
+        <p class="text-sm text-secondary mb-4">Choose a folder (recommended) or select multiple files. Works best in Chromium browsers.</p>
 
         <div class="space-y-4">
           <div>
             <label class="block text-xs uppercase tracking-widest text-secondary mb-2">Select folder</label>
             <input id="folderInput" type="file" webkitdirectory directory multiple class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-3 file:rounded file:border-0 file:bg-white/10 file:text-white hover:file:bg-white/15" />
-            <div class="text-[11px] text-secondary mt-2">Works best in Chromium browsers.</div>
+            <div class="text-[11px] text-secondary mt-2">Your files are read locally by your browser.</div>
           </div>
 
           <div>
@@ -105,7 +170,7 @@
 
       <div class="glass rounded-2xl p-6">
         <h2 class="text-lg font-medium mb-4">2) Or paste code</h2>
-        <p class="text-sm text-secondary mb-4">Quick demo for a single snippet.</p>
+        <p class="text-sm text-secondary mb-4">Quick demo for a single snippet. Keys are masked in outputs.</p>
 
         <textarea id="paste" class="w-full h-48 md:h-56 rounded bg-bg border border-white/10 p-3 text-sm mono text-white/90" placeholder="Paste code here (e.g. .env, Python, JS)."></textarea>
 
@@ -116,7 +181,7 @@
         </div>
 
         <div class="text-[11px] text-secondary mt-3">
-          Exposed keys are <b>masked</b> in the report.
+          Tip: click <b>Load demo dataset</b> above for a safe example.
         </div>
       </div>
     </section>
@@ -173,25 +238,38 @@
         </table>
       </div>
 
-      <div class="mt-8 grid md:grid-cols-2 gap-6">
+      <div id="deliverables" class="mt-8 grid md:grid-cols-2 gap-6">
         <div class="rounded-2xl border border-white/10 p-6">
-          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">Recommended talking points</h3>
+          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">Meeting talking points (60 seconds)</h3>
           <ol class="list-decimal ml-5 space-y-2 text-sm text-white/90">
-            <li><b>Shadow AI exists by default</b>: tools creep into operations before governance does.</li>
-            <li><b>We detect exposure fast</b>: keys, libraries, prompts — first risk signals in a code audit.</li>
-            <li><b>Privacy-first</b>: scanning can run locally (bank-friendly).</li>
-            <li><b>Output is actionable</b>: export report, prioritize remediation, then implement controls.</li>
+            <li><b>We don’t guess.</b> We detect: keys, libraries, prompts.</li>
+            <li><b>We stay private.</b> Local scan, no upload, safe for sensitive orgs.</li>
+            <li><b>We deliver artifacts.</b> Exportable report + remediation plan.</li>
+            <li><b>We can keep it clean.</b> CI monitoring on every commit.</li>
           </ol>
         </div>
         <div class="rounded-2xl border border-white/10 p-6">
-          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">Next step (real engagement)</h3>
-          <p class="text-sm text-white/90 mb-3">Turn this into a client deliverable:</p>
+          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">What we can offer</h3>
           <ul class="space-y-2 text-sm text-white/90">
-            <li>• Run the scanner against internal repos + automation scripts</li>
-            <li>• Add policy + approved tooling list + data handling rules</li>
-            <li>• Produce a 48h audit pack (findings + remediation roadmap)</li>
+            <li>• 48h Shadow AI audit pack (scan + report + quick wins)</li>
+            <li>• AI governance starter pack (policy + tool register + training)</li>
+            <li>• Continuous monitoring (CI alerts + monthly snapshot)</li>
           </ul>
-          <div class="mt-4 text-xs text-secondary">Arx Intelligence — AI compliance for Luxembourg firms</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="mt-10 glass rounded-2xl p-6 md:p-8">
+      <div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+        <div>
+          <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Contact</div>
+          <div class="text-xl font-medium">Want the real audit (not just the demo)?</div>
+          <div class="text-sm text-secondary mt-2">Email: <a class="text-white hover:text-gold" href="mailto:arx.luxembourg@gmail.com">arx.luxembourg@gmail.com</a></div>
+        </div>
+        <div class="flex gap-3">
+          <a class="px-5 py-3 rounded bg-white text-bg font-semibold tracking-widest text-xs uppercase hover:bg-gold transition" href="mailto:arx.luxembourg@gmail.com?subject=Shadow%20AI%20Audit%20Request">Request audit</a>
+          <a class="px-5 py-3 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition" href="https://github.com/ericcmds/Shadow-AI" target="_blank" rel="noreferrer">View repo</a>
         </div>
       </div>
     </section>
@@ -199,7 +277,7 @@
     <footer class="text-xs text-secondary mt-10">
       <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row gap-2 md:items-center justify-between">
         <div>Demo build. No files are transmitted.</div>
-        <div class="mono">v0.1-web</div>
+        <div class="mono">v0.2-web</div>
       </div>
     </footer>
   </main>
@@ -248,7 +326,6 @@ function shouldScanFileName(name){
   if (SKIP_FILES.has(base)) return false;
   const dot = base.lastIndexOf('.');
   const ext = dot >= 0 ? base.slice(dot).toLowerCase() : '';
-  // allow .env with no extension handling
   if (base === '.env') return true;
   return SCAN_EXTENSIONS.has(ext);
 }
@@ -273,7 +350,6 @@ function scanText(content, fileLabel){
     for (const p of API_KEY_PATTERNS){
       p.re.lastIndex = 0;
       if (p.re.test(raw)){
-        // avoid obvious examples
         const lower = raw.toLowerCase();
         if (lower.includes('example') || lower.includes('xxx')) continue;
         findings.push({
@@ -341,7 +417,7 @@ function reportToMarkdown(report){
   md.push(`**Total Indicators Found:** ${findings.length}  `);
   md.push('\n---\n');
   md.push('## 📊 Executive Summary');
-  md.push("This report identifies potential 'Shadow AI' usage—unauthorized or unmanaged AI integration that can lead to data leakage, regulatory non-compliance (EU AI Act), or security vulnerabilities.\n");
+  md.push("This report identifies potential 'Shadow AI' usage—unauthorized or unmanaged AI integration that can lead to data leakage, regulatory non-compliance, or security vulnerabilities.\n");
 
   md.push('| Category | Indicator Type | Count | Severity |');
   md.push('| :--- | :--- | :--- | :--- |');
@@ -376,7 +452,7 @@ function reportToMarkdown(report){
   md.push('1. **Rotate & remove exposed secrets** immediately.');
   md.push('2. **Implement an AI Acceptable Use Policy (AUP)** for employees.');
   md.push('3. **Continuous monitoring**: integrate scanner checks into CI/CD.');
-  md.push('\n*Generated for demo purposes — no files were uploaded.*');
+  md.push('\n*Demo build — no files were uploaded.*');
 
   return md.join('\n');
 }
@@ -542,17 +618,9 @@ el('btnExportMD').addEventListener('click', ()=>{
   downloadText(`shadow-ai-report_${new Date().toISOString().slice(0,10)}.md`, md);
 });
 
-el('btnClear').addEventListener('click', ()=>{
-  el('paste').value = '';
-  el('folderInput').value = '';
-  el('filesInput').value = '';
-  el('fileStatus').textContent = '';
-  currentReport = null;
-  render();
-});
-
+// Load demo dataset into paste
 el('btnDemo').addEventListener('click', ()=>{
-  const demo = `# Example .env\nOPENAI_API_KEY=sk-proj-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\nGITHUB_TOKEN=ghp_1234567890abcdefghijklmnopqrstuvwxyzABCD\n\n# Python\nimport openai\nfrom langchain import PromptTemplate\n\nSYSTEM_PROMPT = \"You are a helpful assistant.\"\n\n# JS\nimport OpenAI from 'openai'\nclient.chat.completions.create({ model: 'gpt-4.1', messages: [{role:'system', content:'You are an AI'}] })\n`;
+  const demo = `# Example .env (FAKE KEYS)\nOPENAI_API_KEY=sk-proj-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\nGITHUB_TOKEN=ghp_1234567890abcdefghijklmnopqrstuvwxyzABCD\n\n# Python\nimport openai\nfrom langchain import PromptTemplate\n\nSYSTEM_PROMPT = \"You are a helpful assistant.\"\n\n# JS\nimport OpenAI from 'openai'\nclient.chat.completions.create({ model: 'gpt-4.1', messages: [{role:'system', content:'You are an AI'}] })\n`;
   el('paste').value = demo;
   el('btnScanPaste').click();
 });

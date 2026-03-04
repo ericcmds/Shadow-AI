@@ -13,14 +13,14 @@ This repository contains:
 
 ## Web Demo
 
-Open locally:
-
-- Double-click `index.html`, or
-- Serve with any static server.
-
 ### Vercel
-
 This repo is configured for Vercel as a static site via `vercel.json`.
+
+### Demo dataset
+- Download: `demo-dataset.zip` (contains fake keys for safe demo)
+
+### Sample report
+- `sample-report.md`
 
 ## CLI Scanner
 
@@ -31,6 +31,5 @@ python3 scanner.py . --md --output report.md
 ```
 
 ## Notes
-
 - Any detected secrets are **masked** in output.
 - This is a demo scaffold; extend patterns + CI integration for production use.

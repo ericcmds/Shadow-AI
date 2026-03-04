@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy — Shadow AI Scanner Demo</title>
+  <meta name="robots" content="index, follow" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { bg:'#020617', surface:'#0F172A', secondary:'#94A3B8', gold:'#D4AF37' }}}};
+  </script>
+  <style>body{background:#020617;color:#F8FAFC}</style>
+</head>
+<body class="min-h-screen">
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <a class="text-sm text-secondary hover:text-white" href="/">← Back</a>
+    <h1 class="text-3xl font-light mt-4">Privacy</h1>
+    <p class="text-secondary mt-4 leading-relaxed">
+      The Shadow AI Scanner demo runs entirely in your browser. When you select a folder or files, your browser reads those files locally to perform pattern matching.
+    </p>
+    <div class="mt-8 rounded-xl border border-white/10 bg-white/5 p-6">
+      <h2 class="text-lg font-medium">What we do</h2>
+      <ul class="mt-3 space-y-2 text-secondary">
+        <li>• Scan text locally for common indicators (keys, AI libraries, prompts)</li>
+        <li>• Mask detected secrets in outputs</li>
+        <li>• Allow exporting reports as Markdown or JSON (downloaded locally)</li>
+      </ul>
+    </div>
+    <div class="mt-6 rounded-xl border border-white/10 bg-white/5 p-6">
+      <h2 class="text-lg font-medium">What we do NOT do</h2>
+      <ul class="mt-3 space-y-2 text-secondary">
+        <li>• No uploading of files to a server</li>
+        <li>• No storage of your selected files by this site</li>
+        <li>• No analytics cookies required for the demo</li>
+      </ul>
+    </div>
+    <p class="text-xs text-secondary mt-10">If you want a managed enterprise deployment (internal hosting, CI integration), contact: <a class="text-white hover:text-gold" href="mailto:arx.luxembourg@gmail.com">arx.luxembourg@gmail.com</a></p>
+  </main>
+</body>
+</html>
