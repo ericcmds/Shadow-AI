@@ -16,6 +16,18 @@
   <meta name="twitter:title" content="Shadow AI Scanner — Privacy‑First Code Risk Demo" />
   <meta name="twitter:description" content="Local-only scanning for exposed keys, AI libraries, and hardcoded prompts." />
 
+  <meta property="og:url" content="https://shadow-ai-five.vercel.app/" />
+  <meta property="og:image" content="https://shadow-ai-five.vercel.app/og-image.png" />
+  <meta property="og:image:alt" content="Shadow AI Scanner — Privacy‑First Code Risk Demo" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:image" content="https://shadow-ai-five.vercel.app/og-image.png" />
+
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -68,7 +80,9 @@
       <nav class="hidden md:flex items-center gap-6 text-xs tracking-widest text-secondary">
         <a href="#why" class="hover:text-gold transition">WHY</a>
         <a href="#demo" class="hover:text-gold transition">DEMO</a>
+        <a href="#how-it-works" class="hover:text-gold transition">HOW</a>
         <a href="#deliverables" class="hover:text-gold transition">DELIVERABLES</a>
+        <a href="#faq" class="hover:text-gold transition">FAQ</a>
         <a href="#contact" class="px-4 py-2 rounded border border-white/10 text-white hover:border-gold/50 hover:text-gold transition">CONTACT</a>
       </nav>
       <a href="#demo" class="md:hidden px-4 py-2 border border-white/15 rounded text-white text-xs tracking-wider hover:border-gold/50 hover:text-gold transition">Run demo</a>
@@ -101,7 +115,7 @@
             </div>
 
             <div class="mt-5 text-xs text-secondary">
-              Note: The dataset contains <b>fake keys</b> for safe demonstration.
+              Note: The dataset contains <b>fake keys</b> for safe demonstration. Exports always <b>mask</b> detected secrets.
             </div>
           </div>
 
@@ -140,6 +154,49 @@
         <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Outcome</div>
         <div class="text-lg font-medium mb-2">Make it detectable + actionable</div>
         <p class="text-sm text-secondary leading-relaxed">We start with fast indicators, then turn findings into a remediation plan and (optionally) continuous monitoring in CI/CD.</p>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="grid lg:grid-cols-3 gap-6 mb-10">
+      <div class="glass rounded-2xl p-6">
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Step 1</div>
+        <div class="text-lg font-medium mb-2">Scope (15–30 min)</div>
+        <p class="text-sm text-secondary leading-relaxed">We define what to scan (repos, scripts, configs), data sensitivity, and your approved tooling policy.</p>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Step 2</div>
+        <div class="text-lg font-medium mb-2">Scan + Evidence</div>
+        <p class="text-sm text-secondary leading-relaxed">We detect risk signals (keys, AI libraries, prompts) and attach concrete evidence with masked snippets.</p>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">Step 3</div>
+        <div class="text-lg font-medium mb-2">Remediation roadmap</div>
+        <p class="text-sm text-secondary leading-relaxed">You get a prioritized plan: rotate secrets, harden configs, define governance controls, and (optionally) monitor continuously in CI.</p>
+      </div>
+    </section>
+
+    <!-- FAQ (Objection killers) -->
+    <section id="faq" class="glass rounded-2xl p-6 md:p-8 mb-10">
+      <div class="text-[11px] uppercase tracking-widest text-secondary mb-2">FAQ</div>
+      <h2 class="text-xl font-medium mb-4">Common questions</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="rounded-2xl border border-white/10 p-6 bg-white/5">
+          <div class="text-sm font-semibold mb-2">Are the keys real?</div>
+          <div class="text-sm text-secondary leading-relaxed">No. The demo dataset contains <b>fake example keys</b>. In real scans, detected secrets are always <b>masked</b> in outputs.</div>
+        </div>
+        <div class="rounded-2xl border border-white/10 p-6 bg-white/5">
+          <div class="text-sm font-semibold mb-2">Do you upload our files?</div>
+          <div class="text-sm text-secondary leading-relaxed">No. This web demo reads files <b>locally</b> in your browser. For enterprise deployments, we can run everything inside your environment.</div>
+        </div>
+        <div class="rounded-2xl border border-white/10 p-6 bg-white/5">
+          <div class="text-sm font-semibold mb-2">Is this a full security audit?</div>
+          <div class="text-sm text-secondary leading-relaxed">It’s an <b>indicator-based first pass</b>: fast detection + evidence. It can have false positives and is meant to accelerate deeper remediation work.</div>
+        </div>
+        <div class="rounded-2xl border border-white/10 p-6 bg-white/5">
+          <div class="text-sm font-semibold mb-2">What’s the business impact?</div>
+          <div class="text-sm text-secondary leading-relaxed">Fewer incidents, faster audits, and less vendor/tool sprawl. You reduce accidental leakage risk while keeping AI productivity high.</div>
+        </div>
       </div>
     </section>
 
@@ -192,6 +249,7 @@
         <div>
           <h2 class="text-xl font-medium">Findings</h2>
           <p class="text-sm text-secondary">Severity is opinionated for demo purposes: API keys are critical; libraries medium; prompts low.</p>
+          <p class="text-xs text-secondary mt-2">Limitations: indicator-based detection (may produce false positives). For production, extend patterns + pair with governance & remediation.</p>
         </div>
         <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
           <div class="rounded-xl border border-white/10 p-3">
