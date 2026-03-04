@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shadow AI Scanner — Live Demo</title>
+  <meta name="description" content="Client-side Shadow AI scanner demo: detects exposed API keys, AI libraries, and hardcoded prompts. Files never leave your browser." />
+  <meta name="robots" content="noindex" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#020617',
+            surface: '#0F172A',
+            primary: '#F8FAFC',
+            secondary: '#94A3B8',
+            gold: '#D4AF37',
+            accent: '#38BDF8',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body{ background:#020617; color:#F8FAFC; }
+    .glass{ background: rgba(15,23,42,.65); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.06); }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body class="min-h-full">
+  <header class="border-b border-white/5 bg-bg/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center text-gold font-semibold">SA</div>
+        <div>
+          <div class="text-sm tracking-[0.22em] text-secondary">ARX INTELLIGENCE</div>
+          <div class="text-lg font-medium">Shadow AI Scanner — Live Demo</div>
+        </div>
+      </div>
+      <div class="text-xs text-secondary hidden md:block">
+        <span class="text-green-400 font-semibold">Privacy-first:</span> runs 100% in your browser
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    <!-- HERO -->
+    <section class="relative overflow-hidden rounded-2xl glass p-8 md:p-10 mb-10">
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle at 20% 0%, rgba(212,175,55,.12) 0%, transparent 55%), radial-gradient(circle at 100% 0%, rgba(56,189,248,.10) 0%, transparent 50%);"></div>
+      <div class="relative">
+        <div class="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-green-500/20 bg-green-500/5 mb-6">
+          <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative rounded-full h-2 w-2 bg-green-500"></span></span>
+          <span class="text-[10px] uppercase tracking-widest font-bold text-green-400">EU AI Act: August 2026 milestone</span>
+        </div>
+
+        <h1 class="text-3xl md:text-5xl font-light leading-tight mb-4">
+          Detect <span class="italic" style="color:#D4AF37">Shadow AI</span> in minutes.
+        </h1>
+        <p class="text-secondary max-w-3xl leading-relaxed mb-6">
+          This demo scans a codebase <b>locally</b> for common risk signals: exposed API keys, AI/LLM library imports, and hardcoded prompts.
+          <span class="text-white">No uploads.</span> No server processing. Your files never leave the browser.
+        </p>
+
+        <div class="flex flex-col md:flex-row gap-3 md:items-center">
+          <button id="btnDemo" class="px-4 py-2.5 rounded bg-white text-bg font-semibold tracking-widest text-xs uppercase hover:bg-gold transition">
+            Load demo dataset
+          </button>
+          <button id="btnClear" class="px-4 py-2.5 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition">
+            Clear
+          </button>
+          <div class="text-xs text-secondary md:ml-auto">
+            Tip: In Chrome you can scan a folder via <span class="mono">Select folder…</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INPUTS -->
+    <section class="grid md:grid-cols-2 gap-6 mb-10">
+      <div class="glass rounded-2xl p-6">
+        <h2 class="text-lg font-medium mb-4">1) Scan a codebase</h2>
+        <p class="text-sm text-secondary mb-4">Choose a folder (recommended) or select multiple files.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs uppercase tracking-widest text-secondary mb-2">Select folder</label>
+            <input id="folderInput" type="file" webkitdirectory directory multiple class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-3 file:rounded file:border-0 file:bg-white/10 file:text-white hover:file:bg-white/15" />
+            <div class="text-[11px] text-secondary mt-2">Works best in Chromium browsers.</div>
+          </div>
+
+          <div>
+            <label class="block text-xs uppercase tracking-widest text-secondary mb-2">Or select files</label>
+            <input id="filesInput" type="file" multiple class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-3 file:rounded file:border-0 file:bg-white/10 file:text-white hover:file:bg-white/15" />
+          </div>
+
+          <button id="btnScanFiles" class="w-full px-4 py-3 rounded bg-gold text-bg font-semibold tracking-widest text-xs uppercase hover:opacity-90 transition">
+            Scan selected
+          </button>
+          <div id="fileStatus" class="text-xs text-secondary"></div>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <h2 class="text-lg font-medium mb-4">2) Or paste code</h2>
+        <p class="text-sm text-secondary mb-4">Quick demo for a single snippet.</p>
+
+        <textarea id="paste" class="w-full h-48 md:h-56 rounded bg-bg border border-white/10 p-3 text-sm mono text-white/90" placeholder="Paste code here (e.g. .env, Python, JS)."></textarea>
+
+        <div class="mt-4 flex gap-3">
+          <button id="btnScanPaste" class="flex-1 px-4 py-3 rounded border border-white/10 text-white tracking-widest text-xs uppercase hover:border-white/25 transition">Scan paste</button>
+          <button id="btnExportMD" disabled class="flex-1 px-4 py-3 rounded bg-white/10 text-white tracking-widest text-xs uppercase disabled:opacity-40 hover:bg-white/15 transition">Export MD</button>
+          <button id="btnExportJSON" disabled class="flex-1 px-4 py-3 rounded bg-white/10 text-white tracking-widest text-xs uppercase disabled:opacity-40 hover:bg-white/15 transition">Export JSON</button>
+        </div>
+
+        <div class="text-[11px] text-secondary mt-3">
+          Exposed keys are <b>masked</b> in the report.
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUT -->
+    <section class="glass rounded-2xl p-6 md:p-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+        <div>
+          <h2 class="text-xl font-medium">Findings</h2>
+          <p class="text-sm text-secondary">Severity is opinionated for demo purposes: API keys are critical; libraries medium; prompts low.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
+          <div class="rounded-xl border border-white/10 p-3">
+            <div class="text-[11px] uppercase tracking-widest text-secondary">Files scanned</div>
+            <div id="kpiFiles" class="text-2xl font-light">—</div>
+          </div>
+          <div class="rounded-xl border border-white/10 p-3">
+            <div class="text-[11px] uppercase tracking-widest text-secondary">Indicators</div>
+            <div id="kpiIndicators" class="text-2xl font-light">—</div>
+          </div>
+          <div class="rounded-xl border border-white/10 p-3">
+            <div class="text-[11px] uppercase tracking-widest text-secondary">Critical</div>
+            <div id="kpiCritical" class="text-2xl font-light text-red-400">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+        <div class="text-xs uppercase tracking-widest text-secondary">Filter</div>
+        <select id="filterSeverity" class="rounded bg-bg border border-white/10 px-3 py-2 text-sm">
+          <option value="all">All</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <input id="filterText" class="flex-1 rounded bg-bg border border-white/10 px-3 py-2 text-sm" placeholder="Search (file, category, snippet)" />
+        <div id="scanMeta" class="text-xs text-secondary md:ml-auto"></div>
+      </div>
+
+      <div class="overflow-auto border border-white/10 rounded-xl">
+        <table class="min-w-full text-sm">
+          <thead class="bg-white/5 text-secondary text-xs uppercase tracking-widest">
+            <tr>
+              <th class="text-left p-3">Severity</th>
+              <th class="text-left p-3">Type</th>
+              <th class="text-left p-3">Category</th>
+              <th class="text-left p-3">File</th>
+              <th class="text-left p-3">Line</th>
+              <th class="text-left p-3">Snippet</th>
+            </tr>
+          </thead>
+          <tbody id="rows" class="divide-y divide-white/5"></tbody>
+        </table>
+      </div>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-6">
+        <div class="rounded-2xl border border-white/10 p-6">
+          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">Recommended talking points</h3>
+          <ol class="list-decimal ml-5 space-y-2 text-sm text-white/90">
+            <li><b>Shadow AI exists by default</b>: tools creep into operations before governance does.</li>
+            <li><b>We detect exposure fast</b>: keys, libraries, prompts — first risk signals in a code audit.</li>
+            <li><b>Privacy-first</b>: scanning can run locally (bank-friendly).</li>
+            <li><b>Output is actionable</b>: export report, prioritize remediation, then implement controls.</li>
+          </ol>
+        </div>
+        <div class="rounded-2xl border border-white/10 p-6">
+          <h3 class="text-sm uppercase tracking-widest text-secondary mb-2">Next step (real engagement)</h3>
+          <p class="text-sm text-white/90 mb-3">Turn this into a client deliverable:</p>
+          <ul class="space-y-2 text-sm text-white/90">
+            <li>• Run the scanner against internal repos + automation scripts</li>
+            <li>• Add policy + approved tooling list + data handling rules</li>
+            <li>• Produce a 48h audit pack (findings + remediation roadmap)</li>
+          </ul>
+          <div class="mt-4 text-xs text-secondary">Arx Intelligence — AI compliance for Luxembourg firms</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-xs text-secondary mt-10">
+      <div class="border-t border-white/5 pt-6 flex flex-col md:flex-row gap-2 md:items-center justify-between">
+        <div>Demo build. No files are transmitted.</div>
+        <div class="mono">v0.1-web</div>
+      </div>
+    </footer>
+  </main>
+
+<script>
+// --- Patterns (roughly aligned with scanner.py) ---
+const API_KEY_PATTERNS = [
+  { category: 'OpenAI', re: /sk-[a-zA-Z0-9]{20,}/g },
+  { category: 'OpenAI Project', re: /sk-proj-[a-zA-Z0-9\-_]{50,}/g },
+  { category: 'Anthropic', re: /sk-ant-[a-zA-Z0-9\-_]{50,}/g },
+  { category: 'Google AI', re: /AIza[a-zA-Z0-9\-_]{35,}/g },
+  { category: 'HuggingFace', re: /hf_[a-zA-Z0-9]{30,}/g },
+  { category: 'GitHub PAT', re: /ghp_[a-zA-Z0-9]{30,}/g },
+];
+
+const AI_LIBRARY_PATTERNS = [
+  { category: 'openai', re: /^\s*import\s+(openai|anthropic|langchain|cohere|pinecone|weaviate|chromadb|llama_index|transformers|torch|tensorflow|mlx|ollama)\b/i },
+  { category: 'openai', re: /^\s*from\s+(openai|anthropic|langchain|cohere|pinecone|weaviate|chromadb|llama_index|transformers|torch|tensorflow|mlx|ollama)\s+import\b/i },
+  { category: 'google.generativeai', re: /^\s*import\s+google\.generativeai\b/i },
+  { category: '@openai', re: /require\(['\"](@?openai|@anthropic|langchain|@pinecone|cohere|@tensorflow|onnxruntime-node|ollama)['\"]\)/i },
+  { category: '@openai', re: /import\s+.*\s+from\s+['\"](@?openai|@anthropic|langchain|@pinecone|cohere|@tensorflow|onnxruntime-node|ollama)['\"]/i },
+];
+
+const PROMPT_PATTERNS = [
+  /You are a helpful assistant/i,
+  /As an AI language model/i,
+  /role\s*:\s*['\"]system['\"]/i,
+  /system\s*:\s*['\"].*['\"]/i,
+  /\.chat\.completions\.create\(/i,
+  /\.messages\.create\(/i,
+  /ChatCompletion\.create\(/i,
+];
+
+const SCAN_EXTENSIONS = new Set(['.py','.js','.ts','.jsx','.tsx','.mjs','.cjs','.json','.yaml','.yml','.toml','.env','.sh','.bash','.md','.txt','.ini','.cfg','.conf']);
+const SKIP_FILES = new Set(['package-lock.json','yarn.lock','pnpm-lock.yaml','poetry.lock','Pipfile.lock','composer.lock']);
+
+function nowISO(){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function shouldScanFileName(name){
+  if (!name) return false;
+  const base = name.split('/').pop();
+  if (SKIP_FILES.has(base)) return false;
+  const dot = base.lastIndexOf('.');
+  const ext = dot >= 0 ? base.slice(dot).toLowerCase() : '';
+  // allow .env with no extension handling
+  if (base === '.env') return true;
+  return SCAN_EXTENSIONS.has(ext);
+}
+
+function maskSecrets(line){
+  let out = line;
+  for (const p of API_KEY_PATTERNS){
+    out = out.replace(p.re, `[REDACTED ${p.category} KEY]`);
+  }
+  return out;
+}
+
+function scanText(content, fileLabel){
+  const findings = [];
+  const lines = (content || '').split(/\r?\n/);
+
+  for (let i=0;i<lines.length;i++){
+    const raw = lines[i];
+    const lineNo = i+1;
+
+    // api keys
+    for (const p of API_KEY_PATTERNS){
+      p.re.lastIndex = 0;
+      if (p.re.test(raw)){
+        // avoid obvious examples
+        const lower = raw.toLowerCase();
+        if (lower.includes('example') || lower.includes('xxx')) continue;
+        findings.push({
+          severity: 'critical',
+          type: 'api_key',
+          category: p.category,
+          file: fileLabel,
+          line: lineNo,
+          snippet: maskSecrets(raw).trim().slice(0,160)
+        });
+      }
+    }
+
+    // libraries
+    for (const p of AI_LIBRARY_PATTERNS){
+      if (p.re.test(raw)){
+        const m = raw.match(p.re);
+        const cat = (m && m[1]) ? m[1] : p.category;
+        findings.push({
+          severity: 'medium',
+          type: 'library',
+          category: cat,
+          file: fileLabel,
+          line: lineNo,
+          snippet: raw.trim().slice(0,160)
+        });
+      }
+    }
+
+    // prompts
+    for (const re of PROMPT_PATTERNS){
+      if (re.test(raw)){
+        findings.push({
+          severity: 'low',
+          type: 'prompt',
+          category: 'hardcoded_prompt',
+          file: fileLabel,
+          line: lineNo,
+          snippet: raw.trim().slice(0,160)
+        });
+        break;
+      }
+    }
+  }
+
+  return findings;
+}
+
+function summarize(findings){
+  const summary = {};
+  for (const f of findings){
+    const key = `${f.type}:${f.category}`;
+    summary[key] = (summary[key] || 0) + 1;
+  }
+  return summary;
+}
+
+function reportToMarkdown(report){
+  const { target, scanDate, filesScanned, findings, summary } = report;
+  const md = [];
+  md.push('# 🛡️ Shadow AI Exposure Report');
+  md.push(`\n**Target:** \`${target}\`  `);
+  md.push(`**Scan Date:** ${scanDate}  `);
+  md.push(`**Files Scanned:** ${filesScanned}  `);
+  md.push(`**Total Indicators Found:** ${findings.length}  `);
+  md.push('\n---\n');
+  md.push('## 📊 Executive Summary');
+  md.push("This report identifies potential 'Shadow AI' usage—unauthorized or unmanaged AI integration that can lead to data leakage, regulatory non-compliance (EU AI Act), or security vulnerabilities.\n");
+
+  md.push('| Category | Indicator Type | Count | Severity |');
+  md.push('| :--- | :--- | :--- | :--- |');
+  const entries = Object.entries(summary).sort((a,b)=>a[0].localeCompare(b[0]));
+  for (const [key,count] of entries){
+    const [type, category] = key.split(':');
+    let sev = '⚪ LOW';
+    if (type === 'api_key') sev = '🔴 CRITICAL';
+    else if (type === 'library') sev = '🟡 MEDIUM';
+    md.push(`| ${category} | ${type.replace('_',' ')} | ${count} | ${sev} |`);
+  }
+
+  if (findings.length){
+    md.push('\n---\n');
+    md.push('## 🔍 Detailed Findings');
+    const order = ['critical','high','medium','low'];
+    for (const sev of order){
+      const group = findings.filter(f=>f.severity===sev);
+      if (!group.length) continue;
+      let label = sev.toUpperCase();
+      if (sev==='critical') label='🚨 CRITICAL (Immediate Action Required)';
+      md.push(`\n### ${label}`);
+      for (const f of group){
+        md.push(`- **${f.category}** in \`${f.file}:${f.line}\``);
+        md.push(`  > \`${f.snippet}\`\n`);
+      }
+    }
+  }
+
+  md.push('\n---\n');
+  md.push('## 💡 Recommendations');
+  md.push('1. **Rotate & remove exposed secrets** immediately.');
+  md.push('2. **Implement an AI Acceptable Use Policy (AUP)** for employees.');
+  md.push('3. **Continuous monitoring**: integrate scanner checks into CI/CD.');
+  md.push('\n*Generated for demo purposes — no files were uploaded.*');
+
+  return md.join('\n');
+}
+
+// --- UI state ---
+let currentReport = null;
+
+const el = (id)=>document.getElementById(id);
+const rowsEl = el('rows');
+
+function setKPIs(files, indicators, critical){
+  el('kpiFiles').textContent = String(files ?? '—');
+  el('kpiIndicators').textContent = String(indicators ?? '—');
+  el('kpiCritical').textContent = String(critical ?? '—');
+}
+
+function badge(sev){
+  const map = {
+    critical: 'bg-red-500/15 text-red-300 border-red-500/25',
+    high: 'bg-orange-500/15 text-orange-300 border-orange-500/25',
+    medium: 'bg-yellow-500/15 text-yellow-200 border-yellow-500/25',
+    low: 'bg-white/10 text-white/70 border-white/10',
+  };
+  const cls = map[sev] || map.low;
+  return `<span class="text-[11px] uppercase tracking-widest px-2 py-1 rounded border ${cls}">${sev}</span>`;
+}
+
+function render(){
+  const report = currentReport;
+  rowsEl.innerHTML = '';
+
+  if (!report){
+    setKPIs('—','—','—');
+    el('scanMeta').textContent = '';
+    el('btnExportMD').disabled = true;
+    el('btnExportJSON').disabled = true;
+    return;
+  }
+
+  const sevFilter = el('filterSeverity').value;
+  const q = (el('filterText').value || '').toLowerCase().trim();
+
+  let list = report.findings.slice();
+  if (sevFilter !== 'all') list = list.filter(f=>f.severity===sevFilter);
+  if (q){
+    list = list.filter(f=>
+      String(f.file).toLowerCase().includes(q) ||
+      String(f.category).toLowerCase().includes(q) ||
+      String(f.type).toLowerCase().includes(q) ||
+      String(f.snippet).toLowerCase().includes(q)
+    );
+  }
+
+  const critical = report.findings.filter(f=>f.severity==='critical').length;
+  setKPIs(report.filesScanned, report.findings.length, critical);
+  el('scanMeta').textContent = `${report.target} • ${report.scanDate}`;
+
+  for (const f of list){
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-white/5';
+    tr.innerHTML = `
+      <td class="p-3">${badge(f.severity)}</td>
+      <td class="p-3 text-secondary">${f.type}</td>
+      <td class="p-3">${f.category}</td>
+      <td class="p-3 text-secondary mono">${f.file}</td>
+      <td class="p-3 text-secondary mono">${f.line}</td>
+      <td class="p-3 mono text-white/90">${escapeHtml(f.snippet)}</td>
+    `;
+    rowsEl.appendChild(tr);
+  }
+
+  el('btnExportMD').disabled = false;
+  el('btnExportJSON').disabled = false;
+}
+
+function escapeHtml(s){
+  return String(s)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;');
+}
+
+async function scanFiles(fileList, targetLabel){
+  const files = Array.from(fileList || []);
+  const start = performance.now();
+
+  const scanTargets = files.filter(f=>shouldScanFileName(f.webkitRelativePath || f.name));
+  el('fileStatus').textContent = `Reading ${scanTargets.length}/${files.length} files…`;
+
+  const findings = [];
+  for (const f of scanTargets){
+    const text = await f.text();
+    const label = f.webkitRelativePath || f.name;
+    findings.push(...scanText(text, label));
+  }
+
+  const report = {
+    target: targetLabel,
+    scanDate: nowISO(),
+    filesScanned: scanTargets.length,
+    findings,
+    summary: summarize(findings),
+    ms: Math.round(performance.now() - start)
+  };
+
+  currentReport = report;
+  el('fileStatus').textContent = `Done in ${report.ms}ms. Findings: ${findings.length}.`;
+  render();
+}
+
+function downloadText(filename, content){
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 500);
+}
+
+// --- Events ---
+el('btnScanPaste').addEventListener('click', ()=>{
+  const text = el('paste').value || '';
+  const findings = scanText(text, 'pasted_snippet');
+  currentReport = {
+    target: 'pasted_snippet',
+    scanDate: nowISO(),
+    filesScanned: 1,
+    findings,
+    summary: summarize(findings),
+    ms: 0,
+  };
+  el('fileStatus').textContent = 'Paste scanned.';
+  render();
+});
+
+el('btnScanFiles').addEventListener('click', async ()=>{
+  const folderFiles = el('folderInput').files;
+  const chosenFolder = folderFiles && folderFiles.length ? folderFiles : null;
+  const files = chosenFolder || el('filesInput').files;
+  if (!files || !files.length){
+    el('fileStatus').textContent = 'Select a folder or files first.';
+    return;
+  }
+  const label = chosenFolder ? 'selected_folder' : 'selected_files';
+  await scanFiles(files, label);
+});
+
+el('filterSeverity').addEventListener('change', render);
+el('filterText').addEventListener('input', ()=>{ window.clearTimeout(window.__ft); window.__ft = setTimeout(render, 100); });
+
+el('btnExportJSON').addEventListener('click', ()=>{
+  if (!currentReport) return;
+  const json = JSON.stringify(currentReport, null, 2);
+  downloadText(`shadow-ai-report_${new Date().toISOString().slice(0,10)}.json`, json);
+});
+
+el('btnExportMD').addEventListener('click', ()=>{
+  if (!currentReport) return;
+  const md = reportToMarkdown(currentReport);
+  downloadText(`shadow-ai-report_${new Date().toISOString().slice(0,10)}.md`, md);
+});
+
+el('btnClear').addEventListener('click', ()=>{
+  el('paste').value = '';
+  el('folderInput').value = '';
+  el('filesInput').value = '';
+  el('fileStatus').textContent = '';
+  currentReport = null;
+  render();
+});
+
+el('btnDemo').addEventListener('click', ()=>{
+  const demo = `# Example .env\nOPENAI_API_KEY=sk-proj-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\nGITHUB_TOKEN=ghp_1234567890abcdefghijklmnopqrstuvwxyzABCD\n\n# Python\nimport openai\nfrom langchain import PromptTemplate\n\nSYSTEM_PROMPT = \"You are a helpful assistant.\"\n\n# JS\nimport OpenAI from 'openai'\nclient.chat.completions.create({ model: 'gpt-4.1', messages: [{role:'system', content:'You are an AI'}] })\n`;
+  el('paste').value = demo;
+  el('btnScanPaste').click();
+});
+
+render();
+</script>
+</body>
+</html>
