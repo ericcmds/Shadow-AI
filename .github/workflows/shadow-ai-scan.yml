@@ -1,0 +1,33 @@
+name: Shadow AI Scan (Demo)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run scanner (exclude demo dataset)
+        continue-on-error: true
+        run: |
+          python3 scanner.py . --md --output shadow-ai-report.md \
+            --exclude "demo-dataset/*" \
+            --exclude "demo-dataset.zip"
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow-ai-report
+          path: shadow-ai-report.md

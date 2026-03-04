@@ -1,14 +1,10 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "privacy.html", "use": "@vercel/static" },
-    { "src": "sample-report.md", "use": "@vercel/static" },
-    { "src": "demo-dataset.zip", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/privacy.html", "destination": "/privacy.html" },
+    { "source": "/sample-report.md", "destination": "/sample-report.md" },
+    { "source": "/demo-dataset.zip", "destination": "/demo-dataset.zip" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {

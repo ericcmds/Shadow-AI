@@ -33,3 +33,11 @@ python3 scanner.py . --md --output report.md
 ## Notes
 - Any detected secrets are **masked** in output.
 - This is a demo scaffold; extend patterns + CI integration for production use.
+
+
+## Security
+- See [SECURITY.md](./SECURITY.md) (never share secrets).
+
+
+## Offering
+- See [OFFERING.md](./OFFERING.md) for packaging this demo into a client service.

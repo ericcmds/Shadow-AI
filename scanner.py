@@ -18,6 +18,7 @@ License: MIT
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import os
 import re
@@ -202,6 +203,15 @@ def should_scan_file(path: Path) -> bool:
     return True
 
 
+
+
+def is_excluded(rel_path: str, exclude_patterns: list[str]) -> bool:
+    # True if rel_path matches any exclude glob pattern
+    for pat in exclude_patterns:
+        if fnmatch.fnmatch(rel_path, pat) or fnmatch.fnmatch(Path(rel_path).name, pat):
+            return True
+    return False
+
 def scan_file(path: Path, report: ScanReport) -> None:
     """Scan a single file for Shadow AI indicators."""
     try:
@@ -259,7 +269,7 @@ def scan_file(path: Path, report: ScanReport) -> None:
                 break  # Only report once per line
 
 
-def scan_directory(target: Path, report: ScanReport) -> None:
+def scan_directory(target: Path, report: ScanReport, exclude_patterns: list[str]) -> None:
     """Recursively scan a directory."""
     for root, dirs, files in os.walk(target):
         # Skip excluded directories
@@ -267,6 +277,9 @@ def scan_directory(target: Path, report: ScanReport) -> None:
 
         for fname in files:
             fpath = Path(root) / fname
+            rel = str(fpath.relative_to(target)).replace("\\", "/")
+            if is_excluded(rel, exclude_patterns):
+                continue
             if should_scan_file(fpath):
                 report.files_scanned += 1
                 scan_file(fpath, report)
@@ -350,6 +363,7 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--md", action="store_true", help="Output as professional Markdown report")
     parser.add_argument("--output", "-o", help="Write report to file")
+    parser.add_argument("--exclude", action="append", default=[], help="Exclude glob pattern (repeatable), e.g. demo-dataset/*")
     args = parser.parse_args()
 
     target = Path(args.target).resolve()
@@ -363,7 +377,7 @@ def main() -> int:
         report.files_scanned = 1
         scan_file(target, report)
     else:
-        scan_directory(target, report)
+        scan_directory(target, report, args.exclude)
 
     if args.output:
         if args.md:
